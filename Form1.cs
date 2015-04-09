@@ -80,7 +80,7 @@ namespace MySQLScriptGenerator
             {
                 value.Add((i + 1).ToString());
                 value.Add("Paweł");
-		int result = writer.addRecord("Tabela", value);
+		        int result = writer.addRecord("Tabela", value);
 
                 switch (result)
                 {
@@ -126,30 +126,15 @@ namespace MySQLScriptGenerator
                 MessageBox.Show("Z nieznanych mi powodów nie udało się dodać bazy.");
         }
 
-        ScriptWriter writer = null;
+        public ScriptWriter writer = null;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Form tmp = new Form();
-            tmp.Width = 750;
-            System.Windows.Forms.Button BackButton;
-            System.Windows.Forms.Button NextButton;
-            System.Windows.Forms.Button EndButton;
-
-            System.Windows.Forms.MaskedTextBox ValueBox;
-            System.Windows.Forms.ComboBox TypeBox;
-            
-            System.Windows.Forms.Label label1;
-            System.Windows.Forms.Label label2;
-
-            List<string> value;
-            List<string> type;
-
-            value = new List<string>();
-            type = new List<string>();
-
+            Form tmp = new ChoiceWindow(writer, tableName.Text);
 
             tmp.Show();
+
+            tableName.Clear();
         }
 
     }
