@@ -15,28 +15,31 @@ namespace MySQLScriptGenerator
         public MainWindow()
         {
             InitializeComponent();
-
+            
             writer = new ScriptWriter();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void CreateDatabaseButton_Click(object sender, EventArgs e)
         {
             if(databaseName.Text == "")
                 MessageBox.Show("Podaj nazwę bazy.");
-            else if(!writer.createDatabase(databaseName.Text, useDatabase.Checked))
+            else if(!writer.createDatabase(databaseName.Text))
                 MessageBox.Show("Baza o tej nazwie już istnieje.");
-
-            if (writer.usingDatabase == 0)
-                useDatabase.Checked = true;
             else
-                useDatabase.Checked = false;
+            {
+                useDatabaseComboBox.Items.Add(databaseName.Text);
+                if (useDatabaseCheckBox.Checked)
+                    useDatabaseComboBox.SelectedItem = databaseName.Text;
+                if (writer.usingDatabase == 0)
+                    useDatabaseCheckBox.Checked = true;
+                else
+                    useDatabaseCheckBox.Checked = false;
+            }
 
             databaseName.Clear();
         }
 
-        ScriptWriter writer = null;
-
-        private void button2_Click(object sender, EventArgs e)
+        private void CreateTableButton_Click(object sender, EventArgs e)
         {
             List<string> value;
             List<string> type;
@@ -68,7 +71,7 @@ namespace MySQLScriptGenerator
             tableName.Clear();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void AddRecordButton_Click(object sender, EventArgs e)
         {
             List<string> value;
             value = new List<string>();
@@ -93,25 +96,61 @@ namespace MySQLScriptGenerator
 
             }
         }
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, System.EventArgs e)
         {
 
         }
 
-        private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        private void label1_Click_1(object sender, System.EventArgs e)
         {
 
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void label1_Click(object sender, System.EventArgs e)
         {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, System.EventArgs e)
+        {
+
+        }
+        private void maskedTextBox1_MaskInputRejected(object sender, System.Windows.Forms.MaskInputRejectedEventArgs e)
+        {
+
+        }
+
+        private void useDatabaseComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!writer.setUsingDatabase(useDatabaseComboBox.SelectedItem.ToString()))
+                MessageBox.Show("Z nieznanych mi powodów nie udało się dodać bazy.");
+        }
+
+        ScriptWriter writer = null;
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Form tmp = new Form();
+            tmp.Width = 750;
+            System.Windows.Forms.Button BackButton;
+            System.Windows.Forms.Button NextButton;
+            System.Windows.Forms.Button EndButton;
+
+            System.Windows.Forms.MaskedTextBox ValueBox;
+            System.Windows.Forms.ComboBox TypeBox;
             
+            System.Windows.Forms.Label label1;
+            System.Windows.Forms.Label label2;
+
+            List<string> value;
+            List<string> type;
+
+            value = new List<string>();
+            type = new List<string>();
+
+
+            tmp.Show();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

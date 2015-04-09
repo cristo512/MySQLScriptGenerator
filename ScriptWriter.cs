@@ -50,18 +50,28 @@ namespace MySQLScriptGenerator
 
         }
 
-	    public bool createDatabase(string name, bool use)
+        public bool setUsingDatabase(string name)
+        {
+            databaseFile.Write("use " + name + ";\r\n\r\n");
+            databaseFile.Flush();
+            for (int i = 0; i < databases.Count(); i++)
+            {
+                if (databases.ElementAt(i).name == name)
+                {
+                    usingDatabase = i + 1;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+	    public bool createDatabase(string name)
         {
             if(!isDatabase(name))
             {
                 databaseFile.Write("create database " + name + ";\r\n\r\n");
 
-                if (use)
-                {
-                    databaseFile.Write("use " + name + ";\r\n\r\n");
-                    databases.Add(new Database(name));
-                    usingDatabase = databases.Count();
-                }
+                databases.Add(new Database(name));
 
                 databaseFile.Flush();
                 return true;
