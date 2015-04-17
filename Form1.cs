@@ -68,7 +68,7 @@ namespace MySQLScriptGenerator
             }
             else
             {
-                Form tmp = new ChoiceWindow(writer, tableName.Text);
+                Form tmp = new NewTableWindow(writer, tableName.Text);
 
                 tmp.Show();
             }
@@ -78,28 +78,29 @@ namespace MySQLScriptGenerator
 
         private void AddRecordButton_Click(object sender, EventArgs e)
         {
-            List<string> value;
-            value = new List<string>();
 
-            for (int i = 0; i < 5; i++)
-            {
-                value.Add((i + 1).ToString());
-                value.Add("Paweł");
-		        int result = writer.addRecord("Tabela", value);
+            //List<string> value;
+            //value = new List<string>();
 
-                switch (result)
-                {
-                    case 1:
-                        MessageBox.Show("Brak używanej bazy.");
-                        value.Clear();
-                        break;
-                    case 2:
-                        MessageBox.Show("Dane tablicy się nie zgadzają.");
-                        value.Clear();
-                        break;
-                }
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    value.Add((i + 1).ToString());
+            //    value.Add("Paweł");
+            //    int result = writer.addRecord("Tabela", value);
 
-            }
+            //    switch (result)
+            //    {
+            //        case 1:
+            //            MessageBox.Show("Brak używanej bazy.");
+            //            value.Clear();
+            //            break;
+            //        case 2:
+            //            MessageBox.Show("Dane tablicy się nie zgadzają.");
+            //            value.Clear();
+            //            break;
+            //    }
+
+            //}
         }
         private void Form1_Load(object sender, System.EventArgs e)
         {
