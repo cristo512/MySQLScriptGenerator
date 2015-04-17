@@ -7,12 +7,37 @@ using System.IO;
 
 namespace MySQLScriptGenerator
 {
-    class ScriptWriter
+    public enum CreateTableError
+    {
+        NoError,
+        NoDatabase,
+        StringIsEmpty,
+        TableExsists
+    };
+
+    public class ScriptWriter
     {
         public ScriptWriter()
         {
             databaseFile = File.CreateText("Baza danych.txt");
             databases = new List<Database>();
+        }
+
+
+        public bool canCreateTable(string name, out CreateTableError reason)
+        {
+            reason = CreateTableError.NoError;
+            if (usingDatabase == 0)
+                reason = CreateTableError.NoDatabase;
+
+            else if (string.IsNullOrEmpty(name))
+                reason = CreateTableError.StringIsEmpty;
+
+            else if (isTableInDatabase(name, databases.ElementAt(usingDatabase - 1)))
+                reason = CreateTableError.TableExsists;
+
+            
+            return reason == CreateTableError.NoError;
         }
 
         private bool isTableInDatabase(string name, Database database)
@@ -79,31 +104,17 @@ namespace MySQLScriptGenerator
             return false;
         }
 
-        public int createTable(string name, List<string> value, List<string> type)
+        public void createTable(string name, List<string> value, List<string> type)
         {
-            if (usingDatabase == 0)
-                return 1;
-
-            if (name.Count() == 0)
-                return 2;
-
-            if (type.Count() != value.Count())
-                return 3;
-
-            if (isTableInDatabase(name, databases.ElementAt(usingDatabase - 1)))
-                return 4;
-
-            databaseFile.Write("create table " + name + "(");
+            databaseFile.Write("create table " + name + "\r\n(\r\n");
             for (int i = 0; i < value.Count(); i++)
             {
                 databaseFile.Write(value.ElementAt(i) + " " + type.ElementAt(i));
-                databaseFile.Write(i + 1 == value.Count() ? ");\r\n\r\n" : ", ");
+                databaseFile.Write(i + 1 == value.Count() ? "\r\n);\r\n\r\n" : ", \r\n");
             }
 
             databaseFile.Flush();
             databases.ElementAt(usingDatabase - 1).table.Add(new Table(name, value.Count()));
-
-            return 0;
 
         }
         public int addRecord(string tableName, List<string> value)
@@ -126,7 +137,6 @@ namespace MySQLScriptGenerator
             return 0;
 
         }
-
         
 	    StreamWriter databaseFile;
         List<Database> databases;

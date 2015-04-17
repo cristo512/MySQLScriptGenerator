@@ -67,6 +67,7 @@
             this.BackButton.Text = "Back";
             this.BackButton.UseVisualStyleBackColor = true;
             this.BackButton.Visible = false;
+            this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
             // ValueNameBox
             // 
@@ -103,6 +104,7 @@
             this.TypeBox.Name = "TypeBox";
             this.TypeBox.Size = new System.Drawing.Size(121, 21);
             this.TypeBox.TabIndex = 3;
+            this.TypeBox.Text = "Wybierz typ";
             this.TypeBox.SelectedIndexChanged += new System.EventHandler(this.TypeBox_SelectedIndexChanged);
             // 
             // ChoiceWindow

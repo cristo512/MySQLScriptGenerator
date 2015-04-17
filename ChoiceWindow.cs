@@ -25,50 +25,92 @@ namespace MySQLScriptGenerator
             TypeBox.Items.Add("int");
             TypeBox.Items.Add("varchar(32)");
             TypeBox.Items.Add("date");
+
+            it = 0;
+            TypeBox.SelectedItem = TypeBox.Items[0];
         }
 
-        private List<string> value;
-        private List<string> type;
-        private string tableName;
-        public ScriptWriter writer;
+        List<string> value;
+        List<string> type;
+
+        int it;
+        string tableName;
+        ScriptWriter writer;
 
 
 
         private void FinishButton_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Value: " + value.ElementAt(0) + " Type: " + type.ElementAt(0));
-
-            switch (writer.createTable(tableName, value, type))
+            if (it == value.Count || (!string.IsNullOrEmpty(value.ElementAt(it).ToString())))
             {
-                case 1:
-                    MessageBox.Show("Brak używanej bazy.");
-                    break;
-                case 2:
-                    MessageBox.Show("Podaj nazwę tabeli.");
-                    break;
-                case 3:
-                    MessageBox.Show("Składnia jest niepoprawna.");
-                    break;
-                case 4:
-                    MessageBox.Show("Tabela o tej nazwie już istnieje.");
-                    break;
-            }
+                if (!String.IsNullOrEmpty(ValueNameBox.Text))
+                {
+                    value.Add(ValueNameBox.Text);
 
-            this.Close();
+                    type.Add(TypeBox.Text.ToString());
+                }
+
+                writer.createTable(tableName, value, type);
+
+                this.Close();
+            }
+            else
+                MessageBox.Show("Wpisz dane.");
         }
 
+        private void BackButton_Click(object sender, EventArgs e)
+        {
+            if(it > 0)
+            {
+                if(it < value.Count)
+                {
+                    value[it] = ValueNameBox.Text;
+                    type[it] = TypeBox.Text.ToString();
+                }
+
+                it--;
+
+                ValueNameBox.Text = value.ElementAt(it).ToString();
+                TypeBox.Text = type.ElementAt(it).ToString();
+
+                if (it == 0)
+                {
+                    FinishButton.Visible = false;
+                    BackButton.Visible = false;
+                }
+            }
+
+        }
         private void NextButton_Click(object sender, EventArgs e)
         {
-            if (ValueNameBox.Text == "")
+            if (string.IsNullOrEmpty(ValueNameBox.Text))
                 MessageBox.Show("Wpisz dane.");
             else
             {
-                value.Add(ValueNameBox.Text);
-                type.Add(TypeBox.SelectedItem.ToString());
+                if(value.Count == it)
+                {
+                    value.Add(ValueNameBox.Text);
+                    type.Add(TypeBox.Text.ToString());
+
+                    ValueNameBox.Clear();
+                }
+                else
+                {
+                    value[it] = ValueNameBox.Text;
+                    type[it] = TypeBox.Text.ToString();
+
+                    if (value.Count == it + 1)
+                        ValueNameBox.Clear();
+                    else
+                    {
+                        ValueNameBox.Text = value.ElementAt(it + 1).ToString();
+                        TypeBox.Text = type.ElementAt(it + 1).ToString();
+                    }
+                }
+
                 FinishButton.Visible = true;
                 BackButton.Visible = true;
-                ValueNameBox.Clear();
-                TypeBox.SelectedItem = 0;
+                it++;
             }
         }
 
@@ -85,6 +127,7 @@ namespace MySQLScriptGenerator
         {
 
         }
+
 
 
     }

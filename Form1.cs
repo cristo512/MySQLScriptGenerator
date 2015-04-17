@@ -12,6 +12,8 @@ namespace MySQLScriptGenerator
 {
     public partial class MainWindow : Form
     {
+        public ScriptWriter writer = null;
+		
         public MainWindow()
         {
             InitializeComponent();
@@ -19,8 +21,15 @@ namespace MySQLScriptGenerator
             writer = new ScriptWriter();
         }
 
+        void validateText(string text)
+        {
+            text.Trim();
+            text.Replace(' ', '_');
+        }
+
         private void CreateDatabaseButton_Click(object sender, EventArgs e)
         {
+            validateText(databaseName.Text);
             if(databaseName.Text == "")
                 MessageBox.Show("Podaj nazwę bazy.");
             else if(!writer.createDatabase(databaseName.Text))
@@ -41,31 +50,27 @@ namespace MySQLScriptGenerator
 
         private void CreateTableButton_Click(object sender, EventArgs e)
         {
-            List<string> value;
-            List<string> type;
-
-            value = new List<string>();
-            type = new List<string>();
-
-            value.Add("id");
-            type.Add("int");
-            value.Add("Imie");
-            type.Add("char(32)");
-
-            switch (writer.createTable(tableName.Text, value, type))
+            CreateTableError error;
+            if (!writer.canCreateTable(tableName.Text, out error))
             {
-                case 1:
-                    MessageBox.Show("Brak używanej bazy.");
-                    break;
-                case 2:
-                    MessageBox.Show("Podaj nazwę tabeli.");
-                    break;
-                case 3:
-                    MessageBox.Show("Składnia jest niepoprawna.");
-                    break;
-                case 4:
-                    MessageBox.Show("Tabela o tej nazwie już istnieje.");
-                    break;
+                switch (error)
+                {
+                    case CreateTableError.NoDatabase:
+                        MessageBox.Show("Brak używanej bazy.");
+                        break;
+                    case CreateTableError.StringIsEmpty:
+                        MessageBox.Show("Podaj nazwę tabeli.");
+                        break;
+                    case CreateTableError.TableExsists:
+                        MessageBox.Show("Tabela o tej nazwie już istnieje.");
+                        break;
+                }
+            }
+            else
+            {
+                Form tmp = new ChoiceWindow(writer, tableName.Text);
+
+                tmp.Show();
             }
 
             tableName.Clear();
@@ -126,16 +131,9 @@ namespace MySQLScriptGenerator
                 MessageBox.Show("Z nieznanych mi powodów nie udało się dodać bazy.");
         }
 
-        public ScriptWriter writer = null;
-
         private void button1_Click(object sender, EventArgs e)
         {
-            Form tmp = new ChoiceWindow(writer, tableName.Text);
 
-            tmp.Show();
-
-            tableName.Clear();
         }
-
     }
 }
