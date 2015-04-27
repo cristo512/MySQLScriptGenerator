@@ -75,7 +75,6 @@
             this.ValueNameBox.Name = "ValueNameBox";
             this.ValueNameBox.Size = new System.Drawing.Size(272, 20);
             this.ValueNameBox.TabIndex = 1;
-            this.ValueNameBox.MaskInputRejected += new System.Windows.Forms.MaskInputRejectedEventHandler(this.ValueNameBox_MaskInputRejected);
             // 
             // label1
             // 

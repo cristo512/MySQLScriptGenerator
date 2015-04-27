@@ -26,6 +26,9 @@ namespace MySQLScriptGenerator
             TypeBox.Items.Add("varchar(32)");
             TypeBox.Items.Add("date");
 
+            ValueNameBox.KeyPress += Utils.NormalizedName_KeyPress;
+            ValueNameBox.TextChanged += Utils.NormalizedName_KeyChanged;
+
             it = 0;
             TypeBox.SelectedItem = TypeBox.Items[0];
         }
@@ -112,11 +115,6 @@ namespace MySQLScriptGenerator
                 BackButton.Visible = true;
                 it++;
             }
-        }
-
-        private void ValueNameBox_MaskInputRejected(object sender, System.Windows.Forms.MaskInputRejectedEventArgs e)
-        {
-
         }
 
         private void TypeBox_SelectedIndexChanged(object sender, EventArgs e)

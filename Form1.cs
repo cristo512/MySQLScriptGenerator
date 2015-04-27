@@ -17,19 +17,21 @@ namespace MySQLScriptGenerator
         public MainWindow()
         {
             InitializeComponent();
-            
-            writer = new ScriptWriter();
-        }
+            databaseName.KeyPress += Utils.NormalizedName_KeyPress;
+            databaseName.TextChanged += Utils.NormalizedName_KeyChanged;
 
-        void validateText(string text)
-        {
-            text.Trim();
-            text.Replace(' ', '_');
+            tableName.KeyPress += Utils.NormalizedName_KeyPress;
+            tableName.TextChanged += Utils.NormalizedName_KeyChanged;
+
+            Random rnd = new Random();
+            if (rnd.Next(10) == 0)
+                Utils.hehe = true;
+            writer = new ScriptWriter();
         }
 
         private void CreateDatabaseButton_Click(object sender, EventArgs e)
         {
-            validateText(databaseName.Text);
+            Utils.validateText(databaseName.Text);
             if(databaseName.Text == "")
                 MessageBox.Show("Podaj nazwę bazy.");
             else if(!writer.createDatabase(databaseName.Text))
@@ -136,5 +138,8 @@ namespace MySQLScriptGenerator
         {
 
         }
+
+
+
     }
 }

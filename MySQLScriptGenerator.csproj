@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptWriter.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="Utils.cs" />
     <EmbeddedResource Include="AddRecordWindow.resx">
       <DependentUpon>AddRecordWindow.cs</DependentUpon>
     </EmbeddedResource>
