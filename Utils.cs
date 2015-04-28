@@ -11,26 +11,42 @@ namespace MySQLScriptGenerator
     {
         static public bool isCharacterAcceptable(char c)
         {
-            if (!((char.IsControl(c)) || char.IsLetter(c)))
+            if (!((char.IsControl(c)) || char.IsLetterOrDigit(c) || c == '_'))
                 return false;
 
             return true;
         }
 
-        static public void validateText(string text)
+        static public bool validateText(string text)
         {
-            text.Trim();
-            text.Replace(' ', '_');
+            bool allDigits = true;
+            for(int i = 0; i < text.Length; i++)
+            {
+                if(!char.IsDigit(text[i]))
+                    allDigits = false;
+
+                if (!isCharacterAcceptable(text[i]))
+                    return false;
+            }
+
+            return !allDigits;
         }
 
         static public void NormalizedName_KeyChanged(object sender, EventArgs e)
         {
             MaskedTextBox textbox = sender as MaskedTextBox;
-            char[] text = textbox.Text.ToCharArray();
 
             if (textbox != null)
             {
-                textbox.Text.Replace(' ', '_');
+                List<char> list = new List<char>();
+
+                for (int i = 0; i < textbox.Text.Length; i++)
+                {
+                    KeyPressEventArgs arg = new KeyPressEventArgs(textbox.Text[i]);
+                    NormalizedName_KeyPress(sender, arg);
+                    if (!arg.Handled)
+                        list.Add(textbox.Text[i]);
+                }
             }
         }
 
@@ -40,8 +56,10 @@ namespace MySQLScriptGenerator
 
             if (hehe)
             {
-                if (it != glupi.Length)
-                    e.KeyChar = glupi[it++];
+                MaskedTextBox textbox = sender as MaskedTextBox;
+
+                if (textbox.Text.Length != glupi.Length)
+                    e.KeyChar = glupi[textbox.Text.Length];
                 else
                     e.Handled = true;
 
@@ -57,7 +75,6 @@ namespace MySQLScriptGenerator
         }
 
         static string glupi = "Jestem gejem ";
-        static int it = 0;
         static public bool hehe = false;
     }
 }

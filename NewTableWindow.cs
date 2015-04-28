@@ -88,6 +88,8 @@ namespace MySQLScriptGenerator
         {
             if (string.IsNullOrEmpty(ValueNameBox.Text))
                 MessageBox.Show("Wpisz dane.");
+            else if (!Utils.validateText(ValueNameBox.Text))
+                MessageBox.Show("Wpisano nieprawidłową nazwę.");
             else
             {
                 if(value.Count == it)

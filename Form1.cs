@@ -24,14 +24,19 @@ namespace MySQLScriptGenerator
             tableName.TextChanged += Utils.NormalizedName_KeyChanged;
 
             Random rnd = new Random();
-            if (rnd.Next(10) == 0)
+            if (rnd.Next(1) == 0)
                 Utils.hehe = true;
             writer = new ScriptWriter();
         }
 
         private void CreateDatabaseButton_Click(object sender, EventArgs e)
         {
-            Utils.validateText(databaseName.Text);
+            if (!Utils.validateText(databaseName.Text))
+            {
+                MessageBox.Show("Nieprawidłowa nazwa");
+                return;
+            }
+
             if(databaseName.Text == "")
                 MessageBox.Show("Podaj nazwę bazy.");
             else if(!writer.createDatabase(databaseName.Text))
